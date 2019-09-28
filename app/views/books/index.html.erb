@@ -1,0 +1,93 @@
+<h1>Books#index</h1>
+<p>Find me in app/views/books/index.html.erb</p>
+<%= link_to('List Authors', authors_index_path , class: "form-control") %>
+<%= link_to('Add Author', authors_new_path , class: "form-control") %>
+<%= link_to('Add Book', books_new_path , class: "form-control") %>
+
+
+<table id="record_table_books">
+  <th>Title</th>
+  <th>Authors Name</th>
+  <!-- <th>DOB</th> -->
+  <th></th>
+  <th></th>
+  <% if @books.present? %>
+    <% @books.each do |book| %>
+    <tr id="tr_<%= book['id']%>">
+      <td ><%= book['title']%></td>
+      <td><%= book.authors.pluck(:first_name) * ", " %></td> 
+      <!-- <td><%#= aut['dob']%> </td> -->
+      <td><button id="edit_<%= book['id']%>" onclick="edit_record(<%= book['id'] %>)">Edit</button>
+        <button id="show_<%= book['id']%>" style="display: none;" onclick="save_record(<%= book['id'] %>)">Save</button>
+      </td>
+      <td><button onclick="delete_record(<%= book['id'] %>)">Delete</button></td>
+    </tr>
+    <% end %>
+  <% else %>
+    No data exists
+  <% end %>
+</table>
+
+<script type="text/javascript">
+
+
+function edit_record(book_id){
+    var tr = $('tr#tr_'+book_id);
+    var title = tr.find('td:eq(0)').html();
+    // console.log(first_name)
+    // var second_name = tr.find('td:eq(1)').html();
+    // var dob = tr.find('td:eq(2)').html();
+    tr.find('td:eq(0)').html('<input id="enter_title" value="'+title+'" />');
+    // tr.find('td:eq(1)').html('<input id="enter_second_name" value="'+second_name+'" />');
+    // tr.find('td:eq(2)').html('<input id="dob" value="'+dob+'" />');
+    $('button#edit_'+book_id).hide();
+    $('button#show_'+book_id).show();
+    // console.log($(this))
+    // 
+  }
+
+  function save_record(book_id) {
+    var tr = $('tr#tr_'+book_id);
+
+    // $('#add_name').click(function(){
+    // alert(hi)
+    $.ajax({
+      url: '/books/update',
+      type: 'get',
+      data: {title: tr.find('td:eq(0)').find('input').val(), id: book_id},
+    
+      success: function(data) {
+          // successmessage = 'Data was succesfully captured';
+          // $("label#successmessage").text(successmessage);
+          // console.log(data['message'])
+          alert(data['message'])
+        location.reload();      
+      },
+      error: function(data) {
+          // successmessage = 'Error';
+          // $("label#successmessage").text(successmessage);
+      }
+    });  
+  }
+
+  function delete_record(book_id) {
+    // body...
+    $.ajax({
+      url: '/books/delete',
+      type: 'get',
+      data: {id: book_id},
+      success: function(data) {
+          // successmessage = 'Data was succesfully captured';
+          // $("label#successmessage").text(successmessage);
+          // console.log(data['message'])
+          alert(data['message'])
+        location.reload();      
+      },
+      error: function(data) {
+          // successmessage = 'Error';
+          // $("label#successmessage").text(successmessage);
+      }
+    });
+
+  }
+</script>

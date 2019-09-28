@@ -1,0 +1,22 @@
+<h1>Authors#new</h1>
+<p>Find me in app/views/authors/new.html.erb</p>
+<%= link_to('List Authors', authors_index_path , class: "form-control") %>
+<%= link_to('Add Book', books_new_path , class: "form-control") %>
+<%= link_to('List Books', books_index_path , class: "form-control") %>
+
+<br>
+
+<input id="enter_first_name"></input>
+<input id="enter_last_name"></input>
+<input id="dob"></input> 
+<button id="add_name">Add Name</button>
+<script type="text/javascript">
+  $('#add_name').click(function(){
+    // alert(hi)
+    $.ajax({
+      url: '/authors/create',
+      type: 'get',
+      data: {first_name: $('#enter_first_name').val(), last_name: $('#enter_last_name').val(), dob: $('#dob').val()}
+    })
+  });
+</script>

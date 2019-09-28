@@ -1,0 +1,36 @@
+<h1>Books#new</h1>
+<p>Find me in app/views/books/new.html.erb</p>
+
+<%= link_to('List Authors', authors_index_path , class: "form-control") %>
+<%= link_to('Add Author', authors_new_path , class: "form-control") %>
+<%= link_to('List Books', books_index_path , class: "form-control") %>
+
+<br>
+
+<input id="enter_book_title"></input>
+<select id="select_author" class="form-control">
+  <option id="" selected>select author</option>
+  <% @author.each do |aut| %>
+    <option id="<%= aut['id'] %>" value="" ><%= aut['first_name'] +' '+ aut['last_name']%></option>
+
+  <% end %>
+</select>
+<button id="add_book_title">Add Title</button>
+
+
+<script type="text/javascript">
+
+  $('#add_book_title').click(function(){
+    // alert(hi)
+    var author_id = $('#select_author').find("option:selected").attr('id');
+    if (author_id == ""){
+      alert("select author");
+      return;
+    }
+    $.ajax({
+      url: '/books/create',
+      type: 'get',
+      data: {title: $('#enter_book_title').val(), author_id: author_id}
+    })
+  });
+</script>
